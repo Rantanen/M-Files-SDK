@@ -78,7 +78,7 @@ namespace MFiles.SDK.VisualStudio.Application
 
 		public override string ProductUserContext
 		{
-			get { throw new NotImplementedException(); }
+			get { return null; }
 		}
 	}
 }

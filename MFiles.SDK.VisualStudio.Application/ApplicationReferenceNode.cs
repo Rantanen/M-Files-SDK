@@ -39,7 +39,7 @@ namespace Microsoft.VisualStudio.Project
 			: base(root, element)
 		{
 			this.path = element.GetFullPathForElement();
-			this.filename = Path.GetFileName(Url);
+			this.filename = Path.GetFileName(this.path);
 		}
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace Microsoft.VisualStudio.Project
 			}
 
 			this.path = assemblyPath;
-			this.filename = Path.GetFileName( Url );
+			this.filename = Path.GetFileName( this.path );
 
 		}
 
