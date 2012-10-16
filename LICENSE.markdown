@@ -8,18 +8,18 @@ Copyright (C) 2012, Mikko Rantanen
 
 M-Files SDK includes code from the following third party projects:
 
-DotNetZip Library
-http://dotnetzip.codeplex.com/
+DotNetZip Library  
+http://dotnetzip.codeplex.com/  
 Licensed under the terms of Microsoft Public License (Ms-PL)
 
-MSBuild Community Tasks
-Copyright (c) 2012, LoreSoft All rights reserved.
-https://github.com/loresoft/msbuildtasks
+MSBuild Community Tasks  
+Copyright (c) 2012, LoreSoft All rights reserved.  
+https://github.com/loresoft/msbuildtasks  
 Licensed under the terms of BSD 3-Clause License.
 
-Managed Package Framework for Projects
-Copyright (c) Microsoft Corporation
-http://mpfproj10.codeplex.com/
+Managed Package Framework for Projects  
+Copyright (c) Microsoft Corporation  
+http://mpfproj10.codeplex.com/  
 Licensed under the terms of Microsoft Public License (Ms-PL)
 
 ### Licenses
