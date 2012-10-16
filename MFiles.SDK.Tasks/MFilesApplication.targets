@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetExt>.zip</TargetExt>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+
+  <!-- Add properties required for WPF -->
+  <PropertyGroup>
+    <!--
+      Add this targets file to the MSBuild project list so the project will
+      be rebuilt when the targets file changes.
+    -->
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildExtensionsPath)\M-Files\M-Files SDK\1.0\MFilesApplication.targets</MSBuildAllProjects>
+    <DefaultLanguageSourceExtension>.js</DefaultLanguageSourceExtension>
+    <Language>JavaScript</Language>
+  </PropertyGroup>
+
+  <!--Reference the assembly where our tasks are defined-->
+  <UsingTask TaskName="MFiles.SDK.Tasks.PackageMFilesApplication" AssemblyFile="MFiles.SDK.Tasks.dll" />
+  <UsingTask TaskName="MFiles.SDK.Tasks.ReloadMFilesVault" AssemblyFile="MFiles.SDK.Tasks.dll" />
+  <UsingTask TaskName="MSBuild.Community.Tasks.Unzip" AssemblyFile="MSBuild.Community.Tasks.dll" />
+  <!--<UsingTask TaskName="Microsoft.Samples.VisualStudio.IronPythonTasks.IronPythonCompilerTask" AssemblyFile="IronPythonTasks.dll" />-->
+  <!--<UsingTask TaskName="CreateCSharpManifestResourceName" AssemblyName="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>-->
+
+  <!--Compile target (this is the target that calls the compiler task)-->
+  <Target Name="MFilesPackage"
+    Inputs="@(Compile);@(ReferencePath);@(CompiledLicenseFile)"
+    Outputs="@(IntermediateAssembly)"
+    >
+    <Message Text="Building: @(IntermediateAssembly)" />
+    <PackageMFilesApplication
+      Name="$(Name)"
+      Guid="$(ProjectGuid)"
+      References="@(Reference);@(_ResolvedProjectReferencePaths)"
+      SourceFiles="@(Compile)"
+      OutputFile="@(IntermediateAssembly)"
+      />
+    <!--
+      ReferencedAssemblies="@(ReferencePath)"
+      ResourceFiles="@(ManifestResourceWithNoCulture);@(ManifestNonResxWithNoCultureOnDisk);@(CompiledLicenseFile)"
+      MainFile="$(MainFile)"
+      TargetKind="$(OutputType)"
+      DebugSymbols="$(DebugSymbols)"
+      ProjectPath="$(MSBuildProjectDirectory)"
+      UseExperimentalCompiler="$(UseIPExperimentalCompiler)"
+      -->
+  </Target>
+
+  <!--This is an override of CoreCompile to have our IronPythonCompilerTarget be called at compile time-->
+  <Target
+      Name="CoreCompile"
+      Inputs="@(Compile);
+              @(ReferencePath)"
+      Outputs="@(IntermediateAssembly)" 
+      DependsOnTargets="$(CoreCompileDependsOn);MFilesPackage"
+    >
+  </Target>
+
+  <Target Name="Run">
+      <Unzip ZipFileName="@(IntermediateAssembly)" TargetDirectory="$(DeployTarget)\$(AssemblyName)" Overwrite="true" />
+      <ReloadMFilesVault VaultName="$(TestVault)" />
+      <Exec Command='explorer.exe "$(TestPath)"' />
+  </Target>
+
+  <Target Name="GetFrameworkPaths" />
+  <Target Name="CreateManifestResourceNames" />
+  <Target Name="ResolveAssemblyReferences" />
+  <Target Name="PrepareResources" />
+
+</Project>

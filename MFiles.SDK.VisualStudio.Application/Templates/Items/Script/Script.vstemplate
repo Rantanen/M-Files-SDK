@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<VSTemplate Version="2.0.0" Type="Item"
+    xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Script</Name>
+    <DefaultName>Script.js</DefaultName>
+    <Description>
+    </Description>
+    <Icon>MFilesApplication.ico</Icon>
+    <ProjectType>MFilesApplication</ProjectType>
+    <SortOrder>100</SortOrder>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem SubType="Code" TargetFileName="$fileinputname$.js" ReplaceParameters="true">Script.js</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

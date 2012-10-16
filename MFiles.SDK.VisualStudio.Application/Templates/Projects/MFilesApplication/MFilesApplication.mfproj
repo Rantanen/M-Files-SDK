@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{99999999-9999-9999-9999-999999999999}</ProjectGuid>
+    <OutputType>Zip</OutputType>
+    <RootNamespace>$safeprojectname$</RootNamespace>
+    <AssemblyName>$safeprojectname$</AssemblyName>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <Name>$safeprojectname$</Name>
+    <ApplicationName>M-Files Application</ApplicationName>
+    <DefaultEnvironments>ShellUI;VaultUI;VaultCore</DefaultEnvironments>
+    <Publisher />
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <MFilesVersion>9.0.3372.0</MFilesVersion>
+    <Description>An M-Files application.</Description>
+    <EnabledByDefault>true</EnabledByDefault>
+    <DeployTarget>D:\Software\M-Files\9.0.3372.6\Client\Apps\{D6B2D708-4437-47A8-8357-77EB29259B2B}\sysapps</DeployTarget>
+    <TestVault>Sample</TestVault>
+    <TestPath>M:\Sample</TestPath>
+    <StartProgram>explorer.exe</StartProgram>
+    <CmdArgs>M:\Sample</CmdArgs>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Application.js">
+      <SubType>Code</SubType>
+      <Environment></Environment>
+      <Test>Value</Test>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\M-Files\M-Files SDK\1.0\MFilesApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
