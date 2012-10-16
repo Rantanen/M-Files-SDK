@@ -6,36 +6,36 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{99999999-9999-9999-9999-999999999999}</ProjectGuid>
     <OutputType>Zip</OutputType>
-    <RootNamespace>$safeprojectname$</RootNamespace>
+    <ApplicationName>$projectname$</ApplicationName>
     <AssemblyName>$safeprojectname$</AssemblyName>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <Name>$safeprojectname$</Name>
-    <ApplicationName>M-Files Application</ApplicationName>
-    <DefaultEnvironments>ShellUI;VaultUI;VaultCore</DefaultEnvironments>
+    <RootNamespace>$safeprojectname$</RootNamespace>
+    <DefaultEnvironments>ShellUI</DefaultEnvironments>
     <Publisher />
     <ApplicationVersion>1.0.0.0</ApplicationVersion>
-    <MFilesVersion>9.0.3372.0</MFilesVersion>
+    <MFilesVersion>9.0.0.0</MFilesVersion>
     <Description>An M-Files application.</Description>
     <EnabledByDefault>true</EnabledByDefault>
-    <DeployTarget>D:\Software\M-Files\9.0.3372.6\Client\Apps\{D6B2D708-4437-47A8-8357-77EB29259B2B}\sysapps</DeployTarget>
-    <TestVault>Sample</TestVault>
-    <TestPath>M:\Sample</TestPath>
-    <StartProgram>explorer.exe</StartProgram>
-    <CmdArgs>M:\Sample</CmdArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
+    <TestVault>Sample Vault</TestVault>
+    <LaunchMode>MFiles</LaunchMode>
+    <LaunchMFilesPath></LaunchMFilesPath>
+    <LaunchPSScript>$app = new-object -Com MFilesAPI.MFilesClientApplication
+# $vault contains MFilesAPI.Vault object for the vault.</LaunchPSScript>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugSymbols>false</DebugSymbols>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>bin\Release</OutputPath>
+    <TestVault>Sample Vault</TestVault>
+    <LaunchMode>MFiles</LaunchMode>
+    <LaunchMFilesPath></LaunchMFilesPath>
+    <LaunchPSScript>$app = new-object -Com MFilesAPI.MFilesClientApplication
+# $vault contains MFilesAPI.Vault object for the vault.</LaunchPSScript>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Application.js">
       <SubType>Code</SubType>
       <Environment></Environment>
-      <Test>Value</Test>
     </Compile>
   </ItemGroup>
   <ItemGroup>

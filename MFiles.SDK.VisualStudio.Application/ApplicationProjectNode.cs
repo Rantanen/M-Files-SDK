@@ -133,19 +133,20 @@ namespace MFiles.SDK.VisualStudio.Application
 		{
 			var guids = new List<Guid>();
 			guids.Add( typeof( ApplicationGeneralPropertyPage ).GUID );
-			guids.Add( typeof( ApplicationDebugPropertyPage ).GUID );
 			return guids.ToArray();
 		}
 
 		protected override Guid[] GetPriorityProjectDesignerPages()
 		{
-			return GetConfigurationIndependentPropertyPages();
+			Guid[] guid = new Guid[ 1 ];
+			guid[ 0 ] = GetConfigurationIndependentPropertyPages()[ 0 ];
+			return guid;
 		}
 
 		protected override Guid[] GetConfigurationDependentPropertyPages()
 		{
 			var guids = new List<Guid>();
-			// guids.Add( typeof( ApplicationDebugPropertyPage ).GUID );
+			guids.Add( typeof( ApplicationDebugPropertyPage ).GUID );
 			return guids.ToArray();
 		}
 

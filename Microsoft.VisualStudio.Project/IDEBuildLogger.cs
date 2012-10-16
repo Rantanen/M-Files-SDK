@@ -33,7 +33,8 @@ namespace Microsoft.VisualStudio.Project
     /// <summary>
     /// This class implements an MSBuild logger that output events to VS outputwindow and tasklist.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "IDE")]
+	[SuppressMessage( "Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable" )]
+	[SuppressMessage( "Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "IDE" )]
     internal class IDEBuildLogger : Logger
     {
         #region fields

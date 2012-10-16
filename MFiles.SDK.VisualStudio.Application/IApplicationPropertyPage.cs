@@ -12,7 +12,7 @@ namespace MFiles.SDK.VisualStudio.Application
 	{
 		Control Control { get; }
 		bool IsDirty { get; }
-		void WriteProperties( ProjectNode project );
-		void ReadProperties( ProjectNode project );
+		void WriteProperties( ProjectProperties properties );
+		void ReadProperties( ProjectProperties properties );
 	}
 }

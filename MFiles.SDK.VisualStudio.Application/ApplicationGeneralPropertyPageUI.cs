@@ -34,69 +34,69 @@ namespace MFiles.SDK.VisualStudio.Application
 
 		public bool IsDirty { get; protected set; }
 
-		public void WriteProperties( ProjectNode project )
+		public void WriteProperties( ProjectProperties properties )
 		{
-			project.SetProjectProperty( "ApplicationName", applicationNameInput.Text );
-			project.SetProjectProperty( "AssemblyName", packageNameInput.Text );
-			project.SetProjectProperty( "RootNamespace", defaultNamespaceInput.Text );
+			properties.SetProperty( "ApplicationName", applicationNameInput.Text );
+			properties.SetProperty( "AssemblyName", packageNameInput.Text );
+			properties.SetProperty( "RootNamespace", defaultNamespaceInput.Text );
 
 			List<string> environments = new List<string>();
 			if( environmentShellUiInput.Checked ) environments.Add( "ShellUI" );
 			if( environmentVaultUiInput.Checked ) environments.Add( "VaultUI" );
 			if( environmentVaultCoreInput.Checked ) environments.Add( "VaultCore" );
-			project.SetProjectProperty( "DefaultEnvironments", string.Join( ";", environments.ToArray() ) );
+			properties.SetProperty( "DefaultEnvironments", string.Join( ";", environments.ToArray() ) );
 
-			project.SetProjectProperty( "Publisher", publisherInput.Text );
+			properties.SetProperty( "Publisher", publisherInput.Text );
 
-			project.SetProjectProperty( "ApplicationVersion", GetVersion(
+			properties.SetProperty( "ApplicationVersion", GetVersion(
 					applicationVersionMajor.Text,
 					applicationVersionMinor.Text,
 					applicationVersionRevision.Text,
 					applicationVersionBuild.Text ) );
 
-			project.SetProjectProperty( "MFilesVersion", GetVersion(
+			properties.SetProperty( "MFilesVersion", GetVersion(
 					mfilesVersionMajor.Text,
 					mfilesVersionMinor.Text,
 					mfilesVersionRevision.Text,
 					mfilesVersionBuild.Text ) );
 
-			project.SetProjectProperty( "Description", descriptionInput.Text );
-			project.SetProjectProperty( "EnabledByDefault", enabledDefaultInput.Checked ? "true" : "false" );
+			properties.SetProperty( "Description", descriptionInput.Text );
+			properties.SetProperty( "EnabledByDefault", enabledDefaultInput.Checked ? "true" : "false" );
 		}
 
-		public void ReadProperties( ProjectNode project )
+		public void ReadProperties( ProjectProperties properties )
 		{
-			applicationNameInput.Text = GetProperty( project, "ApplicationName", "M-Files Application" );
-			packageNameInput.Text = GetProperty( project, "AssemblyName", "MFilesApplication" );
-			defaultNamespaceInput.Text = GetProperty( project, "RootNamespace", "MFilesApplication" );
+			applicationNameInput.Text = GetProperty( properties, "ApplicationName", "M-Files Application" );
+			packageNameInput.Text = GetProperty( properties, "AssemblyName", "MFilesApplication" );
+			defaultNamespaceInput.Text = GetProperty( properties, "RootNamespace", "MFilesApplication" );
 
-			var environments = GetProperty( project, "DefaultEnvironments", "shellui;vaultui;vaultcore" ).ToLower().Split( ';' );
+			var environments = GetProperty( properties, "DefaultEnvironments", "shellui;vaultui;vaultcore" ).ToLower().Split( ';' );
 
 			environmentShellUiInput.Checked = environments.Contains( "shellui" );
 			environmentVaultUiInput.Checked = environments.Contains( "vaultui" );
 			environmentVaultCoreInput.Checked = environments.Contains( "vaultcore" );
 
-			publisherInput.Text = GetProperty( project, "Publisher", "" );
+			publisherInput.Text = GetProperty( properties, "Publisher", "" );
 
-			var applicationVersion = GetVersionSegments( GetProperty( project, "ApplicationVersion", "1.0.0.0" ) );
+			var applicationVersion = GetVersionSegments( GetProperty( properties, "ApplicationVersion", "1.0.0.0" ) );
 			applicationVersionMajor.Text = applicationVersion[ 0 ];
 			applicationVersionMinor.Text = applicationVersion[ 1 ];
 			applicationVersionRevision.Text = applicationVersion[ 2 ];
 			applicationVersionBuild.Text = applicationVersion[ 3 ];
 
-			var mfilesVersion = GetVersionSegments( GetProperty( project, "MFilesVersion", "9.0.3372.0" ) );
+			var mfilesVersion = GetVersionSegments( GetProperty( properties, "MFilesVersion", "9.0.3372.0" ) );
 			mfilesVersionMajor.Text = mfilesVersion[ 0 ];
 			mfilesVersionMinor.Text = mfilesVersion[ 1 ];
 			mfilesVersionRevision.Text = mfilesVersion[ 2 ];
 			mfilesVersionBuild.Text = mfilesVersion[ 3 ];
 
-			descriptionInput.Text = GetProperty( project, "Description", "An M-Files application." );
-			enabledDefaultInput.Checked = GetProperty( project, "EnabledByDefault", "true" ).ToLower() != "false";
+			descriptionInput.Text = GetProperty( properties, "Description", "An M-Files application." );
+			enabledDefaultInput.Checked = GetProperty( properties, "EnabledByDefault", "true" ).ToLower() != "false";
 		}
 
-		private string GetProperty( ProjectNode project, string name, string defaultValue )
+		private string GetProperty( ProjectProperties properties, string name, string defaultValue )
 		{
-			return project.GetProjectProperty( name ) ?? defaultValue;
+			return properties.GetProperty( name ) ?? defaultValue;
 		}
 
 		private string GetVersion( string major, string minor, string revision, string build )
@@ -109,7 +109,7 @@ namespace MFiles.SDK.VisualStudio.Application
 			return version.Split( '.' );
 		}
 
-		Control IApplicationPropertyPage.Control
+		public Control Control
 		{
 			get { return this; }
 		}

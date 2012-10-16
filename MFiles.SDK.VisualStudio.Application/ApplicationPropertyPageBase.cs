@@ -35,14 +35,14 @@ namespace MFiles.SDK.VisualStudio.Application
 		{
 			if( !IsDirty ) { return VSConstants.S_OK; }
 
-			page.WriteProperties( project );
+			page.WriteProperties( new ProjectProperties( project, projectConfigs ) );
 
 			return VSConstants.S_OK;
 		}
 
 		protected void BindProperties()
 		{
-			page.ReadProperties( project );
+			page.ReadProperties( new ProjectProperties( project, projectConfigs ) );
 		}
 
 		public bool IsDirty { get { return page != null && page.IsDirty; } }
