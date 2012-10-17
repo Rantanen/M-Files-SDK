@@ -28,3 +28,8 @@ for the configured vault and performs a vault relogin. This enables a fast
 Hack-F5-Test-Hack cycle for M-Files Applications as well.
 
 ![M-Files Application debug settings](http://ssh.jubjubnest.net/~wace/debug-properties.png)
+
+## Copyright
+
+M-Files is copyright of M-Files Corporation
+
