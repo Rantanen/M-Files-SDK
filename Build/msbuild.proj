@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <UsingTask TaskName="MSBuild.Community.Tasks.AssemblyInfo" AssemblyFile="..\Libs\MSBuild.Community.Tasks.dll" />
+  <UsingTask TaskName="MSBuild.Community.Tasks.Zip" AssemblyFile="..\Libs\MSBuild.Community.Tasks.dll" />
+  <UsingTask TaskName="MSBuild.Community.Tasks.XmlUpdate" AssemblyFile="..\Libs\MSBuild.Community.Tasks.dll" />
+
+  <PropertyGroup>
+      <Version Condition=" '$(Version)' == '' ">0.0.0.1</Version>
+      <VisualStudioVersion>11.0</VisualStudioVersion>
+      <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+  </PropertyGroup>
+
+  <ItemGroup>
+      <BuildProjects
+          Include="..\MFiles.SDK.VisualStudio.Application\MFiles.SDK.VisualStudio.Application.csproj" />
+      <!--
+      <BuildProjects
+          Include="..\MFiles.SDK.Setup\MFiles.SDK.Setup.wixproj" />
+          -->
+  </ItemGroup>
+
+  <PropertyGroup>
+      <ChildProjectProperties>
+          VisualStudioVersion=$(VisualStudioVersion);
+          Configuration=$(Configuration)
+      </ChildProjectProperties>
+  </PropertyGroup>
+
+  <Target Name="Build"
+      DependsOnTargets="UpdateAssemblyInfo;BuildRelease;ResetAssemblyInfo" />
+
+  <Target Name="UpdateAssemblyInfo">
+      <AssemblyInfo
+          CodeLanguage="CS"
+          OutputFile="SharedAssemblyInfo.cs"
+          AssemblyCompany="Mikko Rantanen"
+          AssemblyCopyright="Copyright 2012, Mikko Rantanen"
+          AssemblyVersion="$(Version)"
+          AssemblyFileVersion="$(Version)" />
+
+      <XmlUpdate
+          XmlFileName="..\MFiles.SDK.VisualStudio.Application\source.extension.vsixmanifest"
+          Namespace="http://schemas.microsoft.com/developer/vsx-schema/2011"
+          Prefix="ns"
+          XPath="/ns:PackageManifest/ns:Metadata/ns:Identity/@Version"
+          Value="$(Version)" />
+  </Target>
+
+  <Target Name="ResetAssemblyInfo">
+      <AssemblyInfo
+          CodeLanguage="CS"
+          OutputFile="SharedAssemblyInfo.cs"
+          AssemblyCompany="Mikko Rantanen"
+          AssemblyCopyright="Copyright 2012, Mikko Rantanen"
+          AssemblyVersion="0.0.0.1"
+          AssemblyFileVersion="0.0.0.1" />
+
+      <XmlUpdate
+          XmlFileName="..\MFiles.SDK.VisualStudio.Application\source.extension.vsixmanifest"
+          Namespace="http://schemas.microsoft.com/developer/vsx-schema/2011"
+          Prefix="ns"
+          XPath="/ns:PackageManifest/ns:Metadata/ns:Identity/@Version"
+          Value="0.0.0.1" />
+  </Target>
+
+  <Target Name="BuildRelease" DependsOnTargets="UpdateAssemblyInfo">
+      <MSBuild Projects="@(BuildProjects)" Properties="$(ChildProjectProperties)" />
+
+      <PropertyGroup>
+          <ApplicationProject>..\MFiles.SDK.VisualStudio.Application\bin\$(Configuration)\</ApplicationProject>
+          <TaskSetupProject>..\MFiles.SDK.Setup\bin\$(Configuration)\</TaskSetupProject>
+      </PropertyGroup>
+
+      <!-- Include the license file in the redistributables -->
+      <Copy SourceFiles="..\LICENSE.markdown" DestinationFiles="..\Redist\LICENSE" />
+
+      <ItemGroup>
+        <OutputFiles Include="$(ApplicationProject)MFiles.SDK.VisualStudio.Application.vsix" />
+        <OutputFiles Include="$(TaskSetupProject)MFiles.SDK.Setup.msi" />
+        <OutputFiles Include="..\Redist\*" />
+      </ItemGroup>
+
+      <Zip ZipFileName="MFiles.SDK $(Version).zip"
+          Files="@(OutputFiles)" Flatten="true" />
+
+      <!-- Delete the LICENSE from redist. We only wanted it there for the zipping. -->
+      <Delete Files="..\Redist\LICENSE" />
+
+  </Target>
+</Project>

@@ -41,9 +41,6 @@
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <Reference Include="MSBuild.Community.Tasks">
-      <HintPath>..\Libs\MSBuild.Community.Tasks.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,6 +50,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Build\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="PackageDefinition\ApplicationDashboard.cs" />
     <Compile Include="PackageDefinition\ApplicationDefinition.cs" />
     <Compile Include="PackageDefinition\ApplicationFile.cs" />

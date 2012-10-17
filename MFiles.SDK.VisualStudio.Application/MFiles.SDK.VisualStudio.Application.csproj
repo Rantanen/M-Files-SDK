@@ -154,6 +154,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Build\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="ApplicationConfig.cs" />
     <Compile Include="ApplicationConfigProvider.cs" />
     <Compile Include="ApplicationDebugPropertyPageUI.cs">

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+  <?ifndef Version?><?define Version="0.0.0.1"?><?endif?>
+
+	<Product Id="*" Name="MFiles.SDK.Setup" Language="1033" Version="$(var.Version)" Manufacturer="Mikko Rantanen" UpgradeCode="f6b22778-c6ec-466f-a38d-a06aabde18e6">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="MFiles.SDK.Setup" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+        <Directory Id="MsBuildDir" Name="MSBuild" >
+          <Directory Id="MFilesTasksDir" Name="M-Files" >
+            <Directory Id="MFilesSDKTasksDir" Name="M-Files SDK" >
+              <Directory Id="MFilesSDKTasksInstallDir" Name="1.0" >
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="MFilesSDKTasksInstallDir">
+			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+      <Component Id="MFilesSDKTasks.dll" Guid="AC9B4CA4-B458-48FB-86F9-8350FBE6B56F">
+        <File Source="$(var.MFiles.SDK.Tasks.TargetPath)" KeyPath="yes" />
+        <File Source="$(var.MFiles.SDK.Tasks.TargetDir)MFiles.SDK.Tasks.pdb" />
+      </Component>
+      <Component Id="MFilesApplication.targets" Guid="84AB73FC-FF70-4254-9D7D-6D4BF55A61F5">
+        <File Source="$(var.MFiles.SDK.Tasks.TargetDir)MFilesApplication.targets" />
+      </Component>
+      <Component Id="Ionic.Zip.dll" Guid="A234699B-14E3-4075-9B57-C5AD26D183E2">
+        <File Source="$(var.MFiles.SDK.Tasks.TargetDir)Ionic.Zip.dll" />
+      </Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>
