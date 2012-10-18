@@ -4,8 +4,6 @@
     <TargetExt>.zip</TargetExt>
   </PropertyGroup>
 
-  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
-
   <!-- Add properties required for WPF -->
   <PropertyGroup>
     <!--
@@ -25,19 +23,8 @@
   <!--<UsingTask TaskName="CreateCSharpManifestResourceName" AssemblyName="Microsoft.Build.Tasks, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>-->
 
   <!--Compile target (this is the target that calls the compiler task)-->
-  <Target Name="MFilesPackage"
-    Inputs="@(Compile);@(ReferencePath);@(CompiledLicenseFile)"
-    Outputs="@(IntermediateAssembly)"
-    >
+  <Target Name="MFilesPackage">
     <Message Text="Building: @(IntermediateAssembly)" />
-    <PackageMFilesApplication
-      Name="$(Name)"
-      Guid="$(ProjectGuid)"
-      DefaultEnvironments="$(DefaultEnvironments)"
-      References="@(Reference);@(_ResolvedProjectReferencePaths)"
-      SourceFiles="@(Compile)"
-      OutputFile="@(IntermediateAssembly)"
-      />
     <!--
       ReferencedAssemblies="@(ReferencePath)"
       ResourceFiles="@(ManifestResourceWithNoCulture);@(ManifestNonResxWithNoCultureOnDisk);@(CompiledLicenseFile)"
@@ -49,14 +36,26 @@
       -->
   </Target>
 
+
   <!--This is an override of CoreCompile to have our IronPythonCompilerTarget be called at compile time-->
   <Target
       Name="CoreCompile"
-      Inputs="@(Compile);
-              @(ReferencePath)"
+      Inputs="$(MSBuildAllProjects);
+              @(Compile);
+              @(ReferencePath);
+              @(_ResolvedProjectReferencePaths);
+              @(_Reference)"
       Outputs="@(IntermediateAssembly)" 
-      DependsOnTargets="$(CoreCompileDependsOn);MFilesPackage"
+      DependsOnTargets="$(CoreCompileDependsOn)"
     >
+    <PackageMFilesApplication
+      Name="$(Name)"
+      Guid="$(ProjectGuid)"
+      DefaultEnvironments="$(DefaultEnvironments)"
+      References="@(Reference);@(_ResolvedProjectReferencePaths)"
+      SourceFiles="@(Compile)"
+      OutputFile="@(IntermediateAssembly)"
+      />
   </Target>
 
   <Target Name="Run">
@@ -64,6 +63,8 @@
       <ReloadMFilesVault VaultName="$(TestVault)" />
       <Exec Command='explorer.exe "$(TestPath)"' />
   </Target>
+
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
 
   <Target Name="GetFrameworkPaths" />
   <Target Name="CreateManifestResourceNames" />
