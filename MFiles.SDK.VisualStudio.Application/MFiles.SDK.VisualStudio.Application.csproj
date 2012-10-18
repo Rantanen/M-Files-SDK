@@ -166,7 +166,7 @@
       <DependentUpon>ApplicationDebugPropertyPageUI.cs</DependentUpon>
     </Compile>
     <Compile Include="ApplicationFileNode.cs" />
-    <Compile Include="ApplicationFileNodeProperties.cs" />
+    <Compile Include="ItemProperties\ScriptProperties.cs" />
     <Compile Include="ApplicationGeneralPropertyPage.cs" />
     <Compile Include="ApplicationGeneralPropertyPageUI.cs">
       <SubType>UserControl</SubType>
@@ -179,6 +179,7 @@
     <Compile Include="ApplicationReferenceContainerNode.cs" />
     <Compile Include="ApplicationReferenceNode.cs" />
     <Compile Include="ApplicationDebugPropertyPage.cs" />
+    <Compile Include="ItemProperties\DashboardProperties.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="ApplicationProjectFactory.cs" />
     <Compile Include="IApplicationPropertyPage.cs" />
@@ -222,17 +223,27 @@
     <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Templates\Items\Module\MFilesApplication.ico" />
     <ZipItem Include="Templates\Items\Module\Module.js" />
     <ZipItem Include="Templates\Items\Module\Module.vstemplate">
       <SubType>Designer</SubType>
     </ZipItem>
-    <Content Include="Templates\Projects\MFilesApplication\Scripts\_references.js" />
-    <ZipItem Include="Templates\Items\Script\Script.js" />
-    <ZipItem Include="Templates\Items\Script\Script.vstemplate">
+    <ZipItem Include="Templates\Items\Dashboard\Dashboard.vstemplate">
       <SubType>Designer</SubType>
     </ZipItem>
-    <ZipItem Include="Templates\Items\Script\MFilesApplication.ico" />
+    <ZipItem Include="Templates\Items\Dashboard\Dashboard.html" />
+    <ZipItem Include="Templates\Items\DashboardScript\Script.js" />
+    <ZipItem Include="Templates\Items\DashboardScript\Script.vstemplate">
+      <SubType>Designer</SubType>
+    </ZipItem>
+    <ZipItem Include="Templates\Items\StyleSheet\StyleSheet.css" />
+    <ZipItem Include="Templates\Items\StyleSheet\StyleSheet.vstemplate">
+      <SubType>Designer</SubType>
+    </ZipItem>
+    <Content Include="Templates\Projects\MFilesApplication\Scripts\_references.js" />
+    <ZipItem Include="Templates\Items\ClientScript\Script.js" />
+    <ZipItem Include="Templates\Items\ClientScript\Script.vstemplate">
+      <SubType>Designer</SubType>
+    </ZipItem>
     <VSCTCompile Include="MFilesApplication.vsct" />
     <Content Include="Resources\Package.ico" />
     <ZipProject Include="Templates\Projects\MFilesApplication\Application.js" />
