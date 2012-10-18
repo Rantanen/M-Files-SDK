@@ -58,6 +58,8 @@
     <Compile Include="PackageDefinition\ApplicationFile.cs" />
     <Compile Include="PackageMFilesApplication.cs" />
     <Compile Include="PackageDefinition\ApplicationModule.cs" />
+    <Compile Include="PackageModel\Reference.cs" />
+    <Compile Include="PackageModel\PackageFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReloadMFilesVault.cs" />
   </ItemGroup>
@@ -95,7 +97,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\package.js" />
+    <EmbeddedResource Include="Scripts\package_start.js" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="MFilesAPI">
@@ -110,5 +112,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\package_end.js" />
   </ItemGroup>
 </Project>

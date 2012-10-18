@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
+using Ionic.Zip;
 using MFiles.SDK.Tasks.PackageDefinition;
+using MFiles.SDK.Tasks.PackageModel;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -16,123 +18,137 @@ namespace MFiles.SDK.Tasks
 		{
 			Log.LogMessage( MessageImportance.Low, "Packing M-Files Application." );
 
-			// Gather all the JavaScript files
-			var scripts = new List<string>();
-			scripts.AddRange( SourceFiles );
+			References = References ?? new ITaskItem[ 0 ];
 
-			// Gather all reference files.
-			// For now we do not support project or zip references so this step doesn't require anything special.
-			var referenceFiles = References ?? new string[] { };
+			var references = References.Select( item => new Reference( item ) ).ToList();
+			var files = SourceFiles.Select( item => new PackageFile( item ) ).ToList();
 
-			Log.LogMessage( MessageImportance.Low, "Resolving references." );
+			var appDef = CreateApplicationDefinition( references, files );
+			var outputZip = CreatePackage( references, files );
 
-			// Make sure the referenced files exist.
-			var missingFiles = referenceFiles.Where( r => !File.Exists( r ) ).ToList();
-			foreach( var missingFile in missingFiles )
-				Log.LogError( "Referenced file '{0}' does not exist.", missingFile );
-			if( missingFiles.Count > 0 )
-				return false;
-
-			// Resolve references by filename.
-			var referencesByName = referenceFiles.GroupBy( f => Path.GetFileName( f ) );
-
-			// Resolve the final filenames.
-			var finalReferences = new Dictionary<string, string>();
-			foreach( var nameGroup in referencesByName )
-			{
-				var fileName = nameGroup.Key;
-				var files = nameGroup.ToList();
-
-				if( fileName.ToLower() == "appdef.xml" ) continue;
-				if( fileName.ToLower() == "_package.js" ) continue;
-
-				for( int i = 0; i < files.Count; i++ )
-				{
-					// If there are more than one file with the same name, use a $i as postfix for it.
-					string postfix = "";
-					if( files.Count > 1 )
-						postfix = "$" + i;
-
-					string finalFileName =
-						Path.GetFileNameWithoutExtension( fileName ) +
-						postfix +
-						Path.GetExtension( fileName );
-
-					finalReferences[ files[ i ] ] = finalFileName;
-				}
-
-			}
-
-			// Generate the package definition.
-			var appdef = new ApplicationDefinition();
-			appdef.Guid = this.Guid.Replace("{", "").Replace("}", "");
-			appdef.Name = this.Name;
-			var appfiles = new List<ApplicationFile>();
-			appfiles.Add( new ApplicationFile { Name = "_package.js" } );
-			foreach( var environment in new[] { "vaultcore", "vaultui", "shellui" } )
-			{
-				var module = new ApplicationModule { Environment = environment };
-				appdef.Modules.Add( module );
-				module.Files = appfiles;
-			}
-
-			// Build the zip file.
-
-			// Add the local scripts.
-			if( File.Exists( OutputFile ) )
-				File.Delete( OutputFile );
-			var outputZip = new Ionic.Zip.ZipFile( OutputFile );
-			foreach( var file in SourceFiles )
-			{
-				outputZip.AddFile( file );
-				appfiles.Add( new ApplicationFile { Name = file } );
-			}
-
-			// Add the referenced scripts.
-			foreach( var reference in finalReferences )
-			{
-				var file = reference.Key;
-				if( Path.GetExtension( file ) == ".zip" )
-				{
-					var inputZip = new Ionic.Zip.ZipFile( file );
-					foreach( var e in inputZip.Entries )
-					{
-						var filename = Path.GetFileName( e.FileName ).ToLower();
-						if( filename == "appdef.xml" ) continue;
-						if( filename == "_package.js" ) continue;
-
-						var tempStream = new MemoryStream();
-						e.Extract( tempStream );
-						tempStream.Position = 0;
-						var projectName = Path.GetFileNameWithoutExtension( reference.Value );
-						var entryPath = "_references/" + projectName + "/" + e.FileName;
-						outputZip.AddEntry( entryPath, tempStream );
-						appfiles.Add( new ApplicationFile { Name = entryPath } );
-					}
-				}
-				else
-				{
-					var entry = outputZip.AddFile( file );
-					entry.FileName = "_references/" + reference.Value;
-					appfiles.Add( new ApplicationFile { Name = entry.FileName } );
-				}
-			}
-
+			// Serialize the application definition file.
 			var stream = new MemoryStream();
 			var serializer = new XmlSerializer( typeof( ApplicationDefinition ) );
-			serializer.Serialize( stream, appdef );
+			serializer.Serialize( stream, appDef );
 			stream.Flush();
 			stream.Position = 0;
 			outputZip.AddEntry( "appdef.xml", stream );
 
-			var packageStream = this.GetType().Assembly.GetManifestResourceStream( "MFiles.SDK.Tasks.Scripts.package.js" );
-			outputZip.AddEntry( "_package.js", packageStream );
-
+			// Save the zip.
 			outputZip.Save();
 
-			LogArray( "Scripts", outputZip.Entries.Select( e => e.FileName ) );
-
 			return true;
+		}
+
+		private ZipFile CreatePackage( List<Reference> references, List<PackageFile> files )
+		{
+			// Create the package.
+			if( File.Exists( OutputFile ) )
+				File.Delete( OutputFile );
+			var outputZip = new Ionic.Zip.ZipFile( OutputFile );
+
+			// Add the project files.
+			foreach( var file in files )
+			{
+				outputZip.AddFile( file.FullPath ).FileName = file.PathInProject;
+			}
+
+			// Add the referenced scripts.
+			foreach( var reference in references )
+			{
+				foreach( var e in reference.Zip )
+				{
+					var filename = Path.GetFileName( e.FileName ).ToLower();
+
+					// There are some files that shouldn't be included from the references.
+					if( filename == "appdef.xml" ) continue;
+					if( filename == "libdef.xml" ) continue;
+					if( filename == "_package_start.js" ) continue;
+					if( filename == "_package_end.js" ) continue;
+
+					var tempStream = new MemoryStream();
+					e.Extract( tempStream );
+					tempStream.Position = 0;
+
+					var entryPath = string.Format( "{0}/{1}", reference.PackageName, e.FileName );
+					outputZip.AddEntry( entryPath, tempStream );
+				}
+			}
+
+			// Add the bootstrap libraries.
+			var packageStartStream = this.GetType().Assembly.GetManifestResourceStream( "MFiles.SDK.Tasks.Scripts.package_start.js" );
+			outputZip.AddEntry( "_package_start.js", packageStartStream );
+			var packageEndStream = this.GetType().Assembly.GetManifestResourceStream( "MFiles.SDK.Tasks.Scripts.package_end.js" );
+			outputZip.AddEntry( "_package_end.js", packageEndStream );
+			return outputZip;
+		}
+
+		private ApplicationDefinition CreateApplicationDefinition( List<Reference> references, IEnumerable<PackageFile> files )
+		{
+			var defaultEnvironments = DefaultEnvironments.Select(
+				e => ( TargetEnvironment )Enum.Parse( typeof( TargetEnvironment ), e ) );
+
+			var scripts = files.Where( f => f.Environment != TargetEnvironment.None );
+			var specifiedEnvironments = scripts.Where( f => f.Environment != TargetEnvironment.All ).Select( f => f.Environment ).Distinct();
+			specifiedEnvironments = specifiedEnvironments.Union( defaultEnvironments );
+
+			ApplicationDefinition appdef = new ApplicationDefinition { Name = Name, Guid = Guid };
+
+			// Create the module elements.
+			foreach( var env in specifiedEnvironments )
+			{
+				var module = new ApplicationModule { Environment = env.ToString().ToLower() };
+				appdef.Modules.Add( module );
+
+				// Add the bootstrap scripts.
+				module.Files.Add( new ApplicationFile { Name = "_package_start.js" } );
+
+				// Add javascript files from the references.
+				foreach( var r in references )
+				{
+					var referencedScripts = r.GetScriptsForEnvironment( env );
+					foreach( var script in referencedScripts )
+					{
+						var file = new ApplicationFile { Name = r.PackageName + "/" + script };
+						module.Files.Add( file );
+					}
+				}
+
+				// Add the application's own javascript files.
+				var environmentScripts = scripts.Where( s => s.Environment == TargetEnvironment.All || s.Environment == env );
+				foreach( var script in environmentScripts )
+				{
+					var file = new ApplicationFile { Name = script.PathInProject };
+					module.Files.Add( file );
+				}
+
+				module.Files.Add( new ApplicationFile { Name = "_package_end.js" } );
+			}
+
+			foreach( var db in files.Where(f => f.IsDashboard ) )
+			{
+				var dashboard = new ApplicationDashboard
+				{
+					Id = Path.GetFileNameWithoutExtension(db.PathInProject),
+					Content = db.PathInProject
+				};
+				appdef.Dashboards.Add(dashboard);
+			}
+
+			foreach( var r in references )
+			{
+				foreach( var db in r.GetDashboards() )
+				{
+					var dashboard = new ApplicationDashboard
+					{
+						Id = db.Key,
+						Content = r.PackageName + "/" + db.Value
+					};
+					appdef.Dashboards.Add( dashboard );
+				}
+			}
+
+			return appdef;
 		}
 
 		private void LogArray( string name, IEnumerable<string> array )
@@ -143,11 +159,20 @@ namespace MFiles.SDK.Tasks
 				Log.LogMessage( MessageImportance.High, "  " + item );
 		}
 
+		[Required]
 		public string Name { get; set; }
-		public string Version { get; set; }
+
+		[Required]
 		public string Guid { get; set; }
-		public string[] SourceFiles { get; set; }
+
+		[Required]
+		public ITaskItem[] SourceFiles { get; set; }
+
+		[Required]
 		public string OutputFile { get; set; }
-		public string[] References { get; set; }
+
+		public string Version { get; set; }
+		public ITaskItem[] References { get; set; }
+		public string[] DefaultEnvironments { get; set; }
 	}
 }

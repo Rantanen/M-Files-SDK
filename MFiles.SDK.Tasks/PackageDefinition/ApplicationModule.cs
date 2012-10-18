@@ -10,6 +10,11 @@ namespace MFiles.SDK.Tasks.PackageDefinition
 	[XmlRoot(ElementName="module")]
 	public class ApplicationModule
 	{
+		public ApplicationModule()
+		{
+			Files = new List<ApplicationFile>();
+		}
+
 		[XmlAttribute(AttributeName="environment")]
 		public string Environment { get; set; }
 

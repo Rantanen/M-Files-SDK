@@ -33,6 +33,7 @@
     <PackageMFilesApplication
       Name="$(Name)"
       Guid="$(ProjectGuid)"
+      DefaultEnvironments="$(DefaultEnvironments)"
       References="@(Reference);@(_ResolvedProjectReferencePaths)"
       SourceFiles="@(Compile)"
       OutputFile="@(IntermediateAssembly)"

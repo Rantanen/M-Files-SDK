@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -19,9 +20,9 @@ namespace MFiles.SDK.VisualStudio.Application.ItemProperties
 		}
 
 		[Browsable( true )]
-		[DisplayName("Is Dashboard")]
-		[Description("Specifies whether this HTML file is a dashboard.")]
-		[DefaultValueAttribute(false)]
+		[DisplayName( "Is Dashboard" )]
+		[Description( "Specifies whether this HTML file is a dashboard." )]
+		[DefaultValueAttribute( true )]
 		public bool IsDashboard
 		{
 			get
@@ -35,6 +36,31 @@ namespace MFiles.SDK.VisualStudio.Application.ItemProperties
 			{
 				Node.ItemNode.SetMetadata( "IsDashboard", value.ToString() );
 			}
+		}
+
+		[Browsable( true )]
+		[DisplayName( "Dashboard ID" )]
+		[Description( "Specifies the ID for this dashboard." )]
+		[AmbientValue( "" )]
+		public string DashboardID
+		{
+			get
+			{
+				string value = Node.ItemNode.GetMetadata( "DashboardID" );
+				if( string.IsNullOrEmpty( value ) )
+					return Path.GetFileNameWithoutExtension( this.Node.Url );
+				return value;
+			}
+			set
+			{
+				if( value == "" ) value = null;
+				Node.ItemNode.SetMetadata( "DashboardID", value );
+			}
+		}
+
+		public bool ShouldSerializeDashboardID()
+		{
+			return !string.IsNullOrEmpty( Node.ItemNode.GetMetadata( "DashboardID" ) );
 		}
 
 		[Browsable( false )]

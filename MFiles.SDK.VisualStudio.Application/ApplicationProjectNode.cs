@@ -100,7 +100,7 @@ namespace MFiles.SDK.VisualStudio.Application
                     // Let the project know not to show itself in the Add Project Reference Dialog page
                     this.ShowProjectInSolutionPage = false;
                     // call the container to open the add reference dialog.
-                    string browseFilters = "M-Files Application Files (*.js;*.zip)\0*.js;*.zip\0";
+                    string browseFilters = "M-Files Application Packages (*.zip)\0*.zip\0";
                     ErrorHandler.ThrowOnFailure(componentDialog.ComponentSelectorDlg5(
                         (System.UInt32)(__VSCOMPSELFLAGS.VSCOMSEL_MultiSelectMode | __VSCOMPSELFLAGS.VSCOMSEL_IgnoreMachineName),
                         (IVsComponentUser)this,

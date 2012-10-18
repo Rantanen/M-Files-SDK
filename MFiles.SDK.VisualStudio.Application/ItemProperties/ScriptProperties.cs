@@ -28,7 +28,7 @@ namespace MFiles.SDK.VisualStudio.Application.ItemProperties
 				ScriptEnvironment env;
 				if( Enum.TryParse<ScriptEnvironment>( Node.ItemNode.GetMetadata( "Environment" ), out env ) )
 					return env;
-				return ScriptEnvironment.All;
+				return ScriptEnvironment.None;
 			}
 			set
 			{
