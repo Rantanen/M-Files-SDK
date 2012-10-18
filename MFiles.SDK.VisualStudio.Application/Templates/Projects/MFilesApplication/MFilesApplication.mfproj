@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{99999999-9999-9999-9999-999999999999}</ProjectGuid>
+    <ProjectGuid>$guid1$</ProjectGuid>
     <OutputType>Zip</OutputType>
     <ApplicationName>$projectname$</ApplicationName>
     <AssemblyName>$safeprojectname$</AssemblyName>
@@ -21,16 +21,18 @@
     <TestVault>Sample Vault</TestVault>
     <LaunchMode>MFiles</LaunchMode>
     <LaunchMFilesPath></LaunchMFilesPath>
-    <LaunchPSScript>$app = new-object -Com MFilesAPI.MFilesClientApplication
-# $vault contains MFilesAPI.Vault object for the vault.</LaunchPSScript>
+    <LaunchPSScript>$objType = new-object -Com MFilesAPI.ObjType
+$objType.ID = 0
+$vault.ObjectOperations.ShowBasicNewObjectWindow(0, $ot)</LaunchPSScript>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>bin\Release</OutputPath>
     <TestVault>Sample Vault</TestVault>
     <LaunchMode>MFiles</LaunchMode>
     <LaunchMFilesPath></LaunchMFilesPath>
-    <LaunchPSScript>$app = new-object -Com MFilesAPI.MFilesClientApplication
-# $vault contains MFilesAPI.Vault object for the vault.</LaunchPSScript>
+    <LaunchPSScript>$objType = new-object -Com MFilesAPI.ObjType
+$objType.ID = 0
+$vault.ObjectOperations.ShowBasicNewObjectWindow(0, $ot)</LaunchPSScript>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Application.js">

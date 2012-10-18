@@ -4,11 +4,12 @@ function OnNewShellUI( shellUI ) {
 
     shellUI.Events.OnNewShellFrame = function ( shellFrame ) {
 
-        shellFrame.ShowMessage( {
-            caption: "$projectname$",
-            message: "Hello world!"
-        } );
-
+        shellFrame.Events.OnStarted = function () {
+            shellFrame.ShowMessage( {
+                caption: "$projectname$",
+                message: "Hello world!"
+            } );
+        };
     };
 }
 
