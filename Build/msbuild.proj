@@ -13,16 +13,15 @@
   <ItemGroup>
       <BuildProjects
           Include="..\MFiles.SDK.VisualStudio.Application\MFiles.SDK.VisualStudio.Application.csproj" />
-      <!--
       <BuildProjects
           Include="..\MFiles.SDK.Setup\MFiles.SDK.Setup.wixproj" />
-          -->
   </ItemGroup>
 
   <PropertyGroup>
       <ChildProjectProperties>
           VisualStudioVersion=$(VisualStudioVersion);
-          Configuration=$(Configuration)
+          Configuration=$(Configuration);
+          Version=$(Version)
       </ChildProjectProperties>
   </PropertyGroup>
 
@@ -40,9 +39,9 @@
 
       <XmlUpdate
           XmlFileName="..\MFiles.SDK.VisualStudio.Application\source.extension.vsixmanifest"
-          Namespace="http://schemas.microsoft.com/developer/vsx-schema/2011"
+          Namespace="http://schemas.microsoft.com/developer/vsx-schema/2010"
           Prefix="ns"
-          XPath="/ns:PackageManifest/ns:Metadata/ns:Identity/@Version"
+          XPath="/ns:Vsix/ns:Identifier/ns:Version"
           Value="$(Version)" />
   </Target>
 

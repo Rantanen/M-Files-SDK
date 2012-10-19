@@ -2,6 +2,9 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <DeployDestination>$(MSBuildExtensionsPath)\M-Files\M-Files SDK\1.0\</DeployDestination>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8A20FD5C-509B-499B-97AD-E387D5D5B194}</ProjectGuid>
@@ -71,10 +74,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <DeployDestination>$(MSBuildExtensionsPath)\M-Files\M-Files SDK\1.0\</DeployDestination>
-  </PropertyGroup>
-  <Target Name="AfterBuild">
+  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Debug' ">
     <Message Text="Deploying..." />
     <MakeDir Directories="$(DeployDestination)" Condition="!Exists($(DeployDestination))" />
     <CreateItem Include="$(OutputPath)\*.dll" AdditionalMetadata="Visible=false">
