@@ -14,6 +14,12 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace MFiles.SDK.VisualStudio.Application
 {
+	/// <summary>
+	/// Base class for property pages. 
+	/// 
+	/// Basic implementation for IPropertyPage so the pages themselves can
+	/// focus on the page UI.
+	/// </summary>
 	[ComVisible(true), ClassInterface(ClassInterfaceType.AutoDual)]
 	[Guid("A7214157-9126-4516-AF64-C5E7F34DB825")]
 	public abstract class ApplicationPropertyPageBase : IPropertyPage
@@ -31,6 +37,10 @@ namespace MFiles.SDK.VisualStudio.Application
 		public abstract IApplicationPropertyPage CreatePropertyPage();
 		public abstract string Title { get; }
 
+		/// <summary>
+		/// Apply changes made on the page to the project.
+		/// </summary>
+		/// <returns>Success message</returns>
 		protected int ApplyChanges()
 		{
 			if( !IsDirty ) { return VSConstants.S_OK; }
@@ -40,6 +50,9 @@ namespace MFiles.SDK.VisualStudio.Application
 			return VSConstants.S_OK;
 		}
 
+		/// <summary>
+		/// Read properties from the project to the page.
+		/// </summary>
 		protected void BindProperties()
 		{
 			page.ReadProperties( new ProjectProperties( project, projectConfigs ) );
@@ -47,6 +60,7 @@ namespace MFiles.SDK.VisualStudio.Application
 
 		public bool IsDirty { get { return page != null && page.IsDirty; } }
 
+		// The IPropertyPage methods are inspired by the MPF SettingsPage
 		#region IPropertyPage methods.
 		public virtual void Activate(IntPtr parent, RECT[] pRect, int bModal)
 		{

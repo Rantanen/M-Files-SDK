@@ -8,6 +8,9 @@ using Microsoft.VisualStudio.Project;
 
 namespace MFiles.SDK.VisualStudio.Application
 {
+	/// <summary>
+	/// Interface for application property page UI controls.
+	/// </summary>
 	public interface IApplicationPropertyPage
 	{
 		Control Control { get; }

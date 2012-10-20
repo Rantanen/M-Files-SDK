@@ -13,6 +13,9 @@ using Microsoft.VisualStudio.Shell;
 
 namespace MFiles.SDK.VisualStudio.Application
 {
+	/// <summary>
+	/// M-Files Application Project configuration.
+	/// </summary>
 	class ApplicationConfig : ProjectConfig
 	{
 		ApplicationProjectNode project;
@@ -23,8 +26,15 @@ namespace MFiles.SDK.VisualStudio.Application
 			this.project = project;
 		}
 
+		/// <summary>
+		/// Deploys the M-Files Application to a client and launches it.
+		/// </summary>
+		/// <param name="grfLaunch">Launch flags</param>
+		/// <returns>Success code</returns>
 		public override int DebugLaunch( uint grfLaunch )
 		{
+			// TODO: For debugging, check the grfLaunch flags.
+			// The flags differ for "Launch" and "Launch with debugging".
 			CCITracing.TraceCall();
 
 			// Resolve the test vault.

@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Note: This is older non-VS2012 VSIX format for VS2010 support. -->
 <Vsix xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
   <Identifier Id="7bb74853-3b95-4d45-a7a5-4ee288be7d07">
     <Name>M-Files Visual Studio SDK</Name>

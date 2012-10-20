@@ -14,6 +14,9 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace MFiles.SDK.VisualStudio.Application
 {
+	/// <summary>
+	/// M-Files Application Project general properties page.
+	/// </summary>
 	[ComVisible( true )]
 	[Guid( "81139195-80C9-4077-8895-EFFCD5CC3793" )]
 	[ClassInterface(ClassInterfaceType.AutoDual)]

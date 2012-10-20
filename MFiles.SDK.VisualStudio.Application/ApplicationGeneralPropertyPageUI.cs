@@ -34,6 +34,9 @@ namespace MFiles.SDK.VisualStudio.Application
 
 		public bool IsDirty { get; protected set; }
 
+		/// <summary>
+		/// Write properties to the project configuration.
+		/// </summary>
 		public void WriteProperties( ProjectProperties properties )
 		{
 			properties.SetProperty( "ApplicationName", applicationNameInput.Text );
@@ -64,6 +67,9 @@ namespace MFiles.SDK.VisualStudio.Application
 			properties.SetProperty( "EnabledByDefault", enabledDefaultInput.Checked ? "true" : "false" );
 		}
 
+		/// <summary>
+		/// Read the properties from the project configuration.
+		/// </summary>
 		public void ReadProperties( ProjectProperties properties )
 		{
 			applicationNameInput.Text = GetProperty( properties, "ApplicationName", "M-Files Application" );
@@ -99,11 +105,17 @@ namespace MFiles.SDK.VisualStudio.Application
 			return properties.GetProperty( name ) ?? defaultValue;
 		}
 
+		/// <summary>
+		/// Creates a full version string from the four version parts.
+		/// </summary>
 		private string GetVersion( string major, string minor, string revision, string build )
 		{
 			return string.Format( "{0}.{1}.{2}.{3}", major, minor, revision, build );
 		}
 
+		/// <summary>
+		/// Deconstructs the full version to its parts.
+		/// </summary>
 		private string[] GetVersionSegments( string version )
 		{
 			return version.Split( '.' );

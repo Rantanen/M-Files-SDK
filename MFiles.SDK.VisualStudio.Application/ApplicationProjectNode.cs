@@ -14,11 +14,17 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace MFiles.SDK.VisualStudio.Application
 {
+	/// <summary>
+	/// The main Application project.
+	/// 
+	/// This class represents the project itself as well as the node
+	/// in the solution explorer.
+	/// </summary>
 	public class ApplicationProjectNode : ProjectNode
 	{
+		// Some private values taken from the original ProjectNode.
 		private static Guid addComponentLastActiveTab = VSConstants.GUID_BrowseFilePage;
 		private Guid GUID_MruPage = new Guid("{19B97F03-9594-4c1c-BE28-25FF030113B3}");
-
 
 		private ApplicationProjectPackage package;
 		private ApplicationReferenceContainerNode referenceContainer;
@@ -28,47 +34,37 @@ namespace MFiles.SDK.VisualStudio.Application
 		{
 			this.package = package;
 
+			// Enable 'delete' in the context menu.
 			this.CanProjectDeleteItems = true;
+
+			// Display the property pages in the designer area (.NET project style)
+			// instead of seperate dialog (C++ project style).
 			this.SupportsProjectDesigner = true;
 		}
 
 		public override bool IsCodeFile( string fileName )
 		{
-			return true;
+			return Path.GetExtension( fileName ).ToLowerInvariant() == ".js";
 		}
 
-		public override Guid ProjectGuid
-		{
-			get { return GuidList.guidApplicationProjectFactory; }
-		}
+		/// <summary>
+		/// Gets the project type guid.
+		/// </summary>
+		public override Guid ProjectGuid { get { return GuidList.guidApplicationProjectFactory; } }
 
-		public override string ProjectType
-		{
-			get { return "MFilesApplication"; }
-		}
-
-		protected override ReferenceContainerNode CreateReferenceContainerNode()
-		{
-			this.referenceContainer = new ApplicationReferenceContainerNode(this);
-			return this.referenceContainer;
-		}
-
-
-		public override FileNode CreateFileNode( ProjectElement item )
-		{
-			if( item == null ) throw new ArgumentNullException( "item" );
-			return new ApplicationFileNode( this, item );
-		}
-
-		protected override ConfigProvider CreateConfigProvider()
-		{
-			return new ApplicationConfigProvider( this );
-		}
+		/// <summary>
+		/// Gets the project type this project serves.
+		/// </summary>
+		public override string ProjectType { get { return "MFilesApplication"; } }
 
         /// <summary>
 		/// Override AddProjectReference to hide the .NET and COM tabs.
+		/// 
+		/// This is copied from the base project - just removed some of
+		/// the elements in the tabInitList to remove the .NET and COM
+		/// tabs from the dialog.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Success message</returns>
         public override int AddProjectReference()
         {
             CCITracing.TraceCall();
@@ -130,6 +126,13 @@ namespace MFiles.SDK.VisualStudio.Application
             return VSConstants.S_OK;
         }
 
+
+		// Configuration page methods.
+
+		/// <summary>
+		/// Get the configuration pages which do not have the Configuration drop downs enabled.
+		/// </summary>
+		/// <returns>Guids to the configuration pages.</returns>
 		protected override Guid[] GetConfigurationIndependentPropertyPages ()
 		{
 			var guids = new List<Guid>();
@@ -137,13 +140,10 @@ namespace MFiles.SDK.VisualStudio.Application
 			return guids.ToArray();
 		}
 
-		protected override Guid[] GetPriorityProjectDesignerPages()
-		{
-			Guid[] guid = new Guid[ 1 ];
-			guid[ 0 ] = GetConfigurationIndependentPropertyPages()[ 0 ];
-			return guid;
-		}
-
+		/// <summary>
+		/// Gets the configuration pages which depend on the current project configuration.
+		/// </summary>
+		/// <returns>Guids to the configuration pages.</returns>
 		protected override Guid[] GetConfigurationDependentPropertyPages()
 		{
 			var guids = new List<Guid>();
@@ -151,10 +151,37 @@ namespace MFiles.SDK.VisualStudio.Application
 			return guids.ToArray();
 		}
 
-		public override void AddFileFromTemplate( string source, string target )
+		/// <summary>
+		/// Returns.. priority designer pages.. (Documentation is as helpful as ever).
+		/// </summary>
+		/// <returns></returns>
+		protected override Guid[] GetPriorityProjectDesignerPages()
 		{
-			this.FileTemplateProcessor.UntokenFile( source, target );
-			this.FileTemplateProcessor.Reset();
+			// Returning the first independent property page is
+			// as good a guess as any for now.
+			Guid[] guid = new Guid[ 1 ];
+			guid[ 0 ] = GetConfigurationIndependentPropertyPages()[ 0 ];
+			return guid;
 		}
+
+
+		// Factory methods for returning our own implementations.
+
+		protected override ReferenceContainerNode CreateReferenceContainerNode()
+		{
+			return new ApplicationReferenceContainerNode( this );
+		}
+
+		public override FileNode CreateFileNode( ProjectElement item )
+		{
+			if( item == null ) throw new ArgumentNullException( "item" );
+			return new ApplicationFileNode( this, item );
+		}
+
+		protected override ConfigProvider CreateConfigProvider()
+		{
+			return new ApplicationConfigProvider( this );
+		}
+
 	}
 }

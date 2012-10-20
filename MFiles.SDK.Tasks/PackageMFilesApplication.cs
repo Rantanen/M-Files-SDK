@@ -18,8 +18,12 @@ namespace MFiles.SDK.Tasks
 		{
 			Log.LogMessage( MessageImportance.Low, "Packing M-Files Application." );
 
+			// Make sure the collections are never null.
 			References = References ?? new ITaskItem[ 0 ];
+			SourceFiles = SourceFiles ?? new ITaskItem[ 0 ];
+			DefaultEnvironments = DefaultEnvironments ?? new string[ 0 ];
 
+			// Create the application package contents.
 			var references = References.Select( item => new Reference( item ) ).ToList();
 			var files = SourceFiles.Select( item => new PackageFile( item ) ).ToList();
 
@@ -150,14 +154,6 @@ namespace MFiles.SDK.Tasks
 			}
 
 			return appdef;
-		}
-
-		private void LogArray( string name, IEnumerable<string> array )
-		{
-			Log.LogMessage( MessageImportance.High, name + ":" );
-			if( array == null ) return;
-			foreach( var item in array )
-				Log.LogMessage( MessageImportance.High, "  " + item );
 		}
 
 		[Required]

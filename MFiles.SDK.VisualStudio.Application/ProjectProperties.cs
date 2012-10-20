@@ -7,6 +7,9 @@ using Microsoft.VisualStudio.Project;
 
 namespace MFiles.SDK.VisualStudio.Application
 {
+	/// <summary>
+	/// A small interface class for reading and writing project properties.
+	/// </summary>
 	public class ProjectProperties
 	{
 		private ProjectNode project;

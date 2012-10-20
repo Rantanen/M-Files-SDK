@@ -27,7 +27,6 @@ namespace MFiles.SDK.VisualStudio.Application
 			this.Page = page;
 
 			// If values change mark this as dirty.
-
 			outputPath.TextChanged += ( s, a ) => this.IsDirty = true;
 			vaultInput.SelectedIndexChanged += ( s, a ) => this.IsDirty = true;
 			launchMFilesInput.CheckedChanged += ( s, a ) => this.IsDirty = true;
@@ -35,6 +34,7 @@ namespace MFiles.SDK.VisualStudio.Application
 			mfilesPathInput.TextChanged += ( s, a ) => this.IsDirty = true;
 			powerShellScriptInput.TextChanged += ( s, a ) => this.IsDirty = true;
 
+			// Update control enabled state when radio buttons change.
 			launchMFilesInput.CheckedChanged += ( s, a ) => UpdateControlStates();
 			launchPowerShellInput.CheckedChanged += ( s, a ) => UpdateControlStates();
 			UpdateControlStates();
@@ -45,8 +45,15 @@ namespace MFiles.SDK.VisualStudio.Application
 			apiLabel.Text = string.Format( apiLabel.Text, apiVersion );
 		}
 
+		/// <summary>
+		/// Return true if the page is dirty.
+		/// </summary>
 		public bool IsDirty { get; protected set; }
 
+		/// <summary>
+		/// Write the properties to the configuration.
+		/// </summary>
+		/// <param name="properties">Project property proxy</param>
 		public void WriteProperties( ProjectProperties properties )
 		{
 			properties.SetConfigProperty( "OutputPath", outputPath.Text );
@@ -59,8 +66,14 @@ namespace MFiles.SDK.VisualStudio.Application
 
 			properties.SetConfigProperty( "LaunchMFilesPath", mfilesPathInput.Text );
 			properties.SetConfigProperty( "LaunchPSScript", powerShellScriptInput.Text );
+
+			IsDirty = false;
 		}
 
+		/// <summary>
+		/// Read the properties from the configuration.
+		/// </summary>
+		/// <param name="properties">Project property proxy</param>
 		public void ReadProperties( ProjectProperties properties )
 		{
 			outputPath.Text = properties.GetConfigProperty( "OutputPath" );
@@ -79,6 +92,7 @@ namespace MFiles.SDK.VisualStudio.Application
 			if( psScript != null ) powerShellScriptInput.Text = psScript;
 
 			UpdateControlStates();
+			IsDirty = false;
 		}
 
 		private string GetProperty( ProjectNode project, string name, string defaultValue )
@@ -102,51 +116,8 @@ namespace MFiles.SDK.VisualStudio.Application
 		}
 
 		/// <summary>
-		/// Currently not used. Waits for the proper API loading support.
+		/// Refresh the Target Vaults list.
 		/// </summary>
-		// private void RefreshMFilesVersions()
-		// {
-		// 	// Get the currently loaded M-Files API.
-
-		// 	// We'll do this in its own AppDomain so we can unload the API by
-		// 	// unloading the AppDomain.
-		// 	string loadedApi;
-		// 	using( var scope = new AppDomainScope<ClientMethods>() )
-		// 	{
-		// 		// Delegate the API version query to the worker.
-		// 		loadedApi = scope.Object.GetLoadedAPIVersion();
-		// 	}
-
-		// 	var hklm = Registry.LocalMachine;
-		// 	var mfiles = hklm.OpenSubKey( @"Software\Motive\M-Files" );
-		// 	var versions = mfiles.GetSubKeyNames();
-
-		// 	mfilesVersionInput.Items.Clear();
-		// 	MFilesInstallDirs.Clear();
-		// 	foreach( var v in versions )
-		// 	{
-		// 		var versionKey = mfiles.OpenSubKey( v );
-		// 		var installDir = (string)versionKey.GetValue( "InstallDir" );
-		// 		versionKey.Close();
-
-		// 		var apiPath = Path.Combine( installDir, @"Common\MFilesAPI.dll" );
-
-		// 		if( !File.Exists( apiPath ) )
-		// 			continue;
-
-		// 		string title = v;
-		// 		if( loadedApi == v )
-		// 			title += " (Loaded)";
-
-		// 		mfilesVersionInput.Items.Add(new { Text= title, Value= v });
-		// 		MFilesInstallDirs[v] = installDir;
-		// 	}
-
-		// 	// Close the open keys.
-		// 	mfiles.Close();
-		// 	hklm.Close();
-		// }
-
 		private void RefreshVaults()
 		{
 			// Get the available vaults.
@@ -184,22 +155,32 @@ namespace MFiles.SDK.VisualStudio.Application
 			powerShellScriptInput.Enabled = launchPowerShellInput.Checked;
 		}
 
+		/// <summary>
+		/// Select a path within a vault.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void browsePathButton_Click( object sender, EventArgs e )
 		{
-			var startupFolder = clientApp.GetDriveLetter() + ":\\" + vaultInput.Text + "\\";
+			// TODO: Change this to the Vista-styled select folder dialog
+			// This can be used through P/Invoke or www.ookii.org/software/dialogs.
+			
+			// Display the folder browser dialog to the user.
 			FolderBrowserDialog fbd = new FolderBrowserDialog();
 			fbd.ShowNewFolderButton = false;
 			fbd.RootFolder = Environment.SpecialFolder.MyComputer;
-
 			fbd.ShowDialog();
 
-			if( !fbd.SelectedPath.StartsWith( startupFolder ) )
+			// Make sure the path is within the vault.
+			var vaultRoot = clientApp.GetDriveLetter() + ":\\" + vaultInput.Text + "\\";
+			if( !fbd.SelectedPath.StartsWith( vaultRoot ) )
 			{
 				MessageBox.Show( "Selected path is not in the vault." );
 				return;
 			}
 
-			mfilesPathInput.Text = fbd.SelectedPath.Substring( startupFolder.Length );
+			// Save the path.
+			mfilesPathInput.Text = fbd.SelectedPath.Substring( vaultRoot.Length );
 		}
 	}
 }

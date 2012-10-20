@@ -14,6 +14,9 @@ using Microsoft.VisualStudio.Shell.Interop;
 
 namespace MFiles.SDK.VisualStudio.Application
 {
+	/// <summary>
+	/// The debug property page.
+	/// </summary>
 	[ComVisible( true )]
 	[Guid("CA16E6EF-8014-4EAD-BDB8-6A9A59DD6830")]
 	[ClassInterface(ClassInterfaceType.AutoDual)]

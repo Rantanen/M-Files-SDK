@@ -7,6 +7,9 @@ using Microsoft.VisualStudio.Project;
 
 namespace MFiles.SDK.VisualStudio.Application
 {
+	/// <summary>
+	/// A provider to hook our own ProjectConfig into the Application project.
+	/// </summary>
 	class ApplicationConfigProvider : ConfigProvider
 	{
 		ApplicationProjectNode project;

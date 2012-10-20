@@ -64,18 +64,6 @@ namespace Microsoft.VisualStudio.Project
 		}
 
 		/// <summary>
-		/// Closes the node.
-		/// </summary>
-		/// <returns></returns>
-		public override int Close()
-		{
-			try { this.Dispose(true); }
-			finally { base.Close(); }
-
-			return VSConstants.S_OK;
-		}
-
-		/// <summary>
 		/// Links a reference node to the project and hierarchy.
 		/// </summary>
 		protected override void BindReferenceData()
@@ -88,18 +76,6 @@ namespace Microsoft.VisualStudio.Project
 
 			// Set the basic information.
 			this.ItemNode.SetMetadata(ProjectFileConstants.Name, this.Caption);
-		}
-
-		/// <summary>
-		/// Disposes the node
-		/// </summary>
-		/// <param name="disposing"></param>
-		protected override void Dispose(bool disposing)
-		{
-			if(this.isDisposed) { return; }
-
-			base.Dispose(disposing);
-			this.isDisposed = true;
 		}
 
 		/// <summary>
@@ -116,7 +92,7 @@ namespace Microsoft.VisualStudio.Project
 				ApplicationReferenceNode referenceNode = n as ApplicationReferenceNode;
 				if(null != referenceNode)
 				{
-					// We will check if the full assemblynames are the same or if the Url of the assemblies is the same.
+					// If the reference url (path) is the same, they are equal.
 					if(String.Compare(referenceNode.Url, this.Url, StringComparison.OrdinalIgnoreCase) == 0)
 					{
 						existingReference = referenceNode;
