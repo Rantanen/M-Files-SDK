@@ -40,8 +40,7 @@
 
   <!-- Provide a default value for $(ProjectBasePath) -->
   <PropertyGroup>
-      <!-- <ProjectBasePath Condition="'$(ProjectBasePath)'==''">$(MSBuildThisFileDirectory)</ProjectBasePath> -->
-      <ProjectBasePath>..\Microsoft.VisualStudio.Project</ProjectBasePath>
+      <ProjectBasePath Condition="'$(ProjectBasePath)'==''">$(MSBuildThisFileDirectory)</ProjectBasePath>
   </PropertyGroup>
 
   <ItemGroup>

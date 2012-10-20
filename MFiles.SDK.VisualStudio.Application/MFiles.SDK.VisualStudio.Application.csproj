@@ -6,7 +6,10 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <Import Project="..\Microsoft.VisualStudio.Project\ProjectBase.files" />
+  <PropertyGroup>
+      <ProjectBasePath>..\Libs\Microsoft.VisualStudio.Project</ProjectBasePath>
+  </PropertyGroup>
+  <Import Project="..\Libs\Microsoft.VisualStudio.Project\ProjectBase.files" />
   <PropertyGroup>
     <!--To specify a different registry root to register your package, uncomment the TargetRegistryRoot tag and specify a registry root in it.
     <TargetRegistryRoot></TargetRegistryRoot>-->
