@@ -30,9 +30,7 @@ namespace MFiles.SDK.VisualStudio.Application
 		private IPropertyPageSite site;
 		private ProjectNode project;
 		private ProjectConfig[] projectConfigs;
-		private string name;
 		private static volatile object Mutex = new object();
-		private bool isDisposed;
 
 		public abstract IApplicationPropertyPage CreatePropertyPage();
 		public abstract string Title { get; }

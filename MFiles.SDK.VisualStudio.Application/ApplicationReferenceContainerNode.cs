@@ -41,8 +41,6 @@ namespace MFiles.SDK.VisualStudio.Application
 		/// <returns></returns>
         protected override ReferenceNode CreateReferenceNode(string referenceType, ProjectElement element)
         {
-            ReferenceNode node = null;
-
 			// We got custom reference node for the file references.
             if(referenceType == ProjectFileConstants.Reference)
                 return this.CreateApplicationReferenceNode(element);

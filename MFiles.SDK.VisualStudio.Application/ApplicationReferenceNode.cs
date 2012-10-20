@@ -23,11 +23,6 @@ namespace Microsoft.VisualStudio.Project
 		private string path;
 		private string filename;
 
-		/// <summary>
-		/// A flag for specifying if the object was disposed.
-		/// </summary>
-		private bool isDisposed;
-
 		public override string Url { get { return path; } }
 
 		public override string Caption { get { return filename; } }

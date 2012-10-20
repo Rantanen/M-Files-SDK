@@ -27,7 +27,6 @@ namespace MFiles.SDK.VisualStudio.Application
 		private Guid GUID_MruPage = new Guid("{19B97F03-9594-4c1c-BE28-25FF030113B3}");
 
 		private ApplicationProjectPackage package;
-		private ApplicationReferenceContainerNode referenceContainer;
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors" )]
 		public ApplicationProjectNode( ApplicationProjectPackage package )

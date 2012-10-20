@@ -14,7 +14,6 @@ namespace MFiles.SDK.VisualStudio.Application
 	{
 		private ProjectNode project;
 		private ProjectConfig[] projectConfigs;
-		bool resetCache = true;
 
 		public ProjectProperties( ProjectNode project, ProjectConfig[] configs )
 		{
