@@ -9,9 +9,23 @@
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate EmbedCab="yes" />
 
-		<Feature Id="ProductFeature" Title="MFiles.SDK.Setup" Level="1">
-			<ComponentGroupRef Id="ProductComponents" />
+		<Feature Id="MSBuildTasks"
+             Title="MFiles MSBuild Tasks"
+             Description="MSBuild tasks for packaging M-Files Applications"
+             Display="expand"
+             Level="1">
+
+			<ComponentGroupRef Id="MSBuildTasksComponent" />
 		</Feature>
+
+    <UI Id="MFilesSDKSetupUI">
+      <UIRef Id="WixUI_Minimal"/>
+      <UIRef Id="WixUI_ErrorProgressText"/>
+
+      <!-- <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="" -->
+
+    </UI>
+  <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
 	</Product>
 
 	<Fragment>
@@ -30,8 +44,7 @@
 	</Fragment>
 
 	<Fragment>
-		<ComponentGroup Id="ProductComponents" Directory="MFilesSDKTasksInstallDir">
-			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+		<ComponentGroup Id="MSBuildTasksComponent" Directory="MFilesSDKTasksInstallDir">
       <Component Id="MFilesSDKTasks.dll" Guid="AC9B4CA4-B458-48FB-86F9-8350FBE6B56F">
         <File Source="$(var.MFiles.SDK.Tasks.TargetPath)" KeyPath="yes" />
         <File Source="$(var.MFiles.SDK.Tasks.TargetDir)MFiles.SDK.Tasks.pdb" />
