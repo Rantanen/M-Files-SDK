@@ -7,7 +7,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
-      <ProjectBasePath>..\Libs\Microsoft.VisualStudio.Project</ProjectBasePath>
+    <ProjectBasePath>..\Libs\Microsoft.VisualStudio.Project</ProjectBasePath>
   </PropertyGroup>
   <Import Project="..\Libs\Microsoft.VisualStudio.Project\ProjectBase.files" />
   <PropertyGroup>
@@ -195,6 +195,12 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ApplicationProjectPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectVaultDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectVaultDialog.Designer.cs">
+      <DependentUpon>SelectVaultDialog.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ApplicationDebugPropertyPageUI.resx">
@@ -207,6 +213,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectVaultDialog.resx">
+      <DependentUpon>SelectVaultDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
