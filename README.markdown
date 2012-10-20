@@ -1,5 +1,11 @@
 # M-Files SDK
 
+### Downloads
+
+[Latest release build](http://mfiles.jubjubnest.net/guestAuth/repository/download/bt3/lastSuccessful/MFiles.SDK%20%7Bbuild.number%7D.zip) is the latest manually created build.
+
+[Latest continuous integration build](http://mfiles.jubjubnest.net/guestAuth/repository/download/bt2/lastSuccessful/MFiles.SDK%20%7Bbuild.number%7D.zip) is the latest build automatically created from the head of the repository.
+
 ## MSBuild Tasks
 
 MSBuild tasks for packaging M-Files applications. Currently there are two tasks.
