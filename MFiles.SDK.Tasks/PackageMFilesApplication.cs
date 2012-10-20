@@ -92,6 +92,7 @@ namespace MFiles.SDK.Tasks
 			var specifiedEnvironments = scripts.Where( f => f.Environment != TargetEnvironment.All ).Select( f => f.Environment ).Distinct();
 			specifiedEnvironments = specifiedEnvironments.Union( defaultEnvironments );
 
+			Guid = Guid.Replace( "{", "" ).Replace( "}", "" );
 			ApplicationDefinition appdef = new ApplicationDefinition { Name = Name, Guid = Guid };
 
 			// Create the module elements.
