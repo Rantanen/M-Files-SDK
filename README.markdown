@@ -38,5 +38,7 @@ Hack-F5-Test-Hack cycle for M-Files Applications as well.
 
 ## Copyright
 
-M-Files is copyright of M-Files Corporation
+M-Files is copyright of M-Files Corporation.  
+M-Files SDK is not an official M-Files product and M-Files corporation
+does not povide support for it.
 
